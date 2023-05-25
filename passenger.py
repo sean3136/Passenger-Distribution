@@ -15,5 +15,8 @@ while True:
   stop_id = input("請輸入欲查詢站牌代號: ")
   if stop_id == "q":
     break
+  elif stop_id not in ["0", "1", "2"]:
+    print("輸入錯誤，請重新輸入")
+    continue
   else:
     passenger_distribute(stop_id)
