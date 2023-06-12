@@ -17,7 +17,8 @@ bus_stops = get_bus_stop()
 bus = get_bus()
 
 def add():
-    Label(window, text='H',bg='#E0FFFF',font=(50),fg = '#0080FF').place(x=20, y=l)
+    lb.config(text="H")
+    lb.place(x=20,y=l)
     
 def show_busstop():
     global l
@@ -37,7 +38,7 @@ def show_busstop():
         btn.place(x=30, y=l)
         l=l+30;
 class Mainpage(Tk.Frame):
-    global window
+    global window,lb
     window = Tk.Tk()
     window.title('Passenger Distribution System')
     window.geometry('800x600')
@@ -45,6 +46,7 @@ class Mainpage(Tk.Frame):
     window.configure(background='#E0FFFF')
     name = Tk.StringVar("")
     Label(window, text='search bus:',bg='#E0FFFF',font=(16)).place(x=30, y=10)
+    lb = Label(window, text='',bg='#E0FFFF',font=(16),fg = '#0080FF')
     enter = Tk.Entry(window, textvariable=name,bd = 2,width=45,relief='sunken',show="bus_stop")
     enter.place(x=30, y=34)
     show_busstop()
