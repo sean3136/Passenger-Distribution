@@ -6,7 +6,6 @@ bus_stops= get_bus_stop()
 bus = get_bus()
 
 def detect(id):
-  # while True:
     # 更新各站等待人數
     sum_num = 0
     for i in bus_stops:
@@ -22,4 +21,3 @@ def detect(id):
 
     # 欲查詢站牌後面各站總等待人數
     return sum_num
-    # time.sleep(5)

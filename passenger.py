@@ -2,6 +2,7 @@ from passenger_distribute import passenger_distribute
 from bus_stop import get_bus_stop
 from bus import get_bus
 from detect import detect
+import time
 bus_stops = get_bus_stop()
 bus = get_bus()
 
@@ -19,4 +20,7 @@ while True:
     print("輸入錯誤，請重新輸入")
     continue
   else:
-    passenger_distribute(stop_id)
+    while(time.localtime().tm_sec % 5 != 0):
+      stop_person = detect(stop_id)
+    if(time.localtime().tm_sec % 5 == 0):
+      passenger_distribute(stop_id)
