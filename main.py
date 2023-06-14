@@ -6,10 +6,10 @@ import pandas as pd
 import matplotlib.pylab as plt
 from tkinter import *
 import tkinter as Tk
+import tkinter.font as font
 import time
 import tkinter.messagebox
 import system as sys
-from passenger_distribute import passenger_distribute
 from bus_stop import get_bus_stop
 from bus import get_bus
 from detect import detect
@@ -36,8 +36,6 @@ def search(stop_id):
 
 
 def add(stop):
-    lb.config(text="H")
-    lb.place(x=20, y=l)
     if (os.path.exists('./image/busStop' + str(stop) + '.jpg')):
         image = Image.open('./image/busStop' + str(stop) + '.jpg')
     else:
@@ -76,12 +74,18 @@ def show_busstop():
                         bg='#E0FFFF',
                         )
         stop_btn.append(btn)
-
-        btn.place(x=30, y=l)
+        btn.place(x=40, y=l)
         l = l+30
+    print(stop_btn[17].place_info())
     for i in range(len(bus_stops)):
         stop_btn[i].config(command=lambda b=i: add(b))
 
+def bus_move():
+    lb.place(x=20, y=76)
+    for i in range(1, 512):
+        lb.place(x=20, y=76+i)
+        window.update()
+        time.sleep(0.03)
 
 class Mainpage(Tk.Frame):
     global window, lb, pic
@@ -96,12 +100,24 @@ class Mainpage(Tk.Frame):
     my_img = ImageTk.PhotoImage(img)
     pic = Label(window, image=my_img)
     pic.place(x=420, y=100)
-    Label(window, text='search bus:', bg='#E0FFFF', font=(16)).place(x=30, y=10)
-    lb = Label(window, text='', bg='#E0FFFF', font=(16), fg='#0080FF')
-    name = Tk.StringVar()
-    enter = Tk.Entry(window, textvariable=name,
-                     bd=2, width=45, relief='sunken')
-    enter.place(x=30, y=34)
+
+    lb = Label(window, text='-->', bg='#E0FFFF', font=(16), fg='red')
+    lb.place(x=20, y=76)
+
+    border_color = Frame(window, background="navy")
+    bus_1579 = Label(border_color, text='1579 Bus', bd=0,  font=font.Font(size=25),
+          relief='solid')
+    bus_1579.pack(padx=1, pady=1)
+    border_color.pack(padx=40, pady=40)
+
+    bus_btn = Tk.Button(window, text='Bus Start', font=font.Font(size=15),
+                        relief='sunken',
+                        activeforeground='#0072E3',
+                        justify='left',
+                        # width=25,
+                        bg='#E0FFFF',
+                        command=bus_move)
+    bus_btn.place(x=620, y=500)
     show_busstop()
 
 
