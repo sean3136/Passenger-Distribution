@@ -25,4 +25,3 @@ def detect():
 
     # 欲查詢站牌後面各站總等待人數
     return sum_num
-    # time.sleep(5)
