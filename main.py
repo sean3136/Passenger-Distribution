@@ -6,10 +6,10 @@ import pandas as pd
 import matplotlib.pylab as plt
 from tkinter import *
 import tkinter as Tk
-import tkinter.font as font
 import time
 import tkinter.messagebox
 import system as sys
+from passenger_distribute import passenger_distribute
 from bus_stop import get_bus_stop
 from bus import get_bus
 from detect import detect
@@ -36,6 +36,8 @@ def search(stop_id):
 
 
 def add(stop):
+    lb.config(text="H")
+    lb.place(x=20, y=l)
     if (os.path.exists('./image/busStop' + str(stop) + '.jpg')):
         image = Image.open('./image/busStop' + str(stop) + '.jpg')
     else:
@@ -54,7 +56,7 @@ def show_busstop_info(stop):
         busstop_info_label.destroy()  # Clear previous bus stop info label
 
     bus_stop = bus_stops[stop]
-    info = f"  \t本站排隊人數: {bus_stop.waiting_people}\n  \t本站可上車人數: {bus_stop.stop_available}"
+    info = f"  \t本站排隊人數: {bus_stop.waiting_people}\n  \t本站可上車人數: {bus_stop.stop_available}\n  \t車上剩餘座位: {bus_stop.bus_remaining_capacity}"
     busstop_info_label = Label(
         window, text=info, bg='#E0FFFF', font=(80), fg='#000000')
     busstop_info_label.place(x=530, y=420)
@@ -66,7 +68,7 @@ def show_busstop():
     for i in bus_stops:
         btn = Tk.Button(window,
                         text=i.get_stop_name(),
-                        font=(20),
+                        font=(24),
                         relief='flat',
                         activeforeground='#0072E3',
                         justify='left',
@@ -74,18 +76,53 @@ def show_busstop():
                         bg='#E0FFFF',
                         )
         stop_btn.append(btn)
-        btn.place(x=40, y=l)
+
+        btn.place(x=30, y=l)
         l = l+30
-    print(stop_btn[17].place_info())
     for i in range(len(bus_stops)):
         stop_btn[i].config(command=lambda b=i: add(b))
 
-def bus_move():
-    lb.place(x=20, y=76)
-    for i in range(1, 512):
-        lb.place(x=20, y=76+i)
-        window.update()
-        time.sleep(0.03)
+
+def show_result():
+    global k, remain
+    k = 46
+    remain = 0
+    result_window = Tk.Tk()
+    result_window.title('Passenger Distribution Result')
+    result_window.geometry('800x600')
+    result_window.resizable(width=False, height=False)
+    result_window.configure(background='#E0FFFF')
+    title = Label(result_window, text='分配後各站剩餘人數',
+                  bg='#E0FFFF', font=(28), fg='#000000')
+    title.pack()
+    for i in range(len(bus_stops)):
+        stop_name = bus_stops[i].stop_name
+        stop_name_length = len(stop_name)
+        if stop_name_length < 10:
+            stop_name = stop_name.ljust(10)
+
+        info = f"站牌名稱：{stop_name}剩餘人數：{bus_stops[i].waiting_people - bus_stops[i].stop_available}"
+        remain += bus_stops[i].waiting_people - bus_stops[i].stop_available
+        lbl = Label(result_window, text=info,
+                    bg='#E0FFFF', font=(20), fg='#000000',
+                    relief='flat',
+                    justify='left',
+                    width=80,
+                    anchor='w'
+                    )
+        lbl.place(x=60, y=k)
+        k = k + 28
+    if remain >= 25:
+        t = f"分配後剩餘排隊人數： {remain}，建議增派班次"
+    else:
+        t = f"分配後排隊人數： {remain}，班次足夠"
+    rmn = Label(result_window, text=t,
+                bg='#E0FFFF', font=("40"), fg='#000000',
+                relief='flat',
+                justify='left',
+                )
+    rmn.place(x=280, y=550)
+
 
 class Mainpage(Tk.Frame):
     global window, lb, pic
@@ -100,24 +137,19 @@ class Mainpage(Tk.Frame):
     my_img = ImageTk.PhotoImage(img)
     pic = Label(window, image=my_img)
     pic.place(x=420, y=100)
-
-    lb = Label(window, text='-->', bg='#E0FFFF', font=(16), fg='red')
-    lb.place(x=20, y=76)
-
-    border_color = Frame(window, background="navy")
-    bus_1579 = Label(border_color, text='1579 Bus', bd=0,  font=font.Font(size=25),
-          relief='solid')
-    bus_1579.pack(padx=1, pady=1)
-    border_color.pack(padx=40, pady=40)
-
-    bus_btn = Tk.Button(window, text='Bus Start', font=font.Font(size=15),
-                        relief='sunken',
-                        activeforeground='#0072E3',
-                        justify='left',
-                        # width=25,
-                        bg='#E0FFFF',
-                        command=bus_move)
-    bus_btn.place(x=620, y=500)
+    Label(window, text='search bus:', bg='#E0FFFF', font=(16)).place(x=30, y=10)
+    lb = Label(window, text='', bg='#E0FFFF', font=(16), fg='#0080FF')
+    name = Tk.StringVar()
+    enter = Tk.Entry(window, textvariable=name,
+                     bd=2, width=45, relief='sunken')
+    enter.place(x=30, y=34)
+    result = Tk.Button(window, text='報表', font=(24), relief='flat',
+                       activeforeground='#0072E3',
+                       justify='left',
+                       width=25,
+                       bg='#E0FFFF', )
+    result.place(x=300, y=650)
+    result.config(command=show_result)
     show_busstop()
 
 

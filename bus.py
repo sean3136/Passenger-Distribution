@@ -26,7 +26,7 @@ class bus:
         return "客運ID: " + str(self.bus_id) + ", 可上車人數: " + str(self.bus_capacity) + "\n"
 
 
-bus_1579 = bus("1579", 40, 0)
+bus_1579 = bus("1579", 50, 0)
 
 
 def get_bus():
