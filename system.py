@@ -44,4 +44,3 @@ def algorithm():
               "可上車人數: " + str(bus_stops[max_index].stop_available), end="\n")
         print("車上剩餘空位: " + str(init_bus_capacity), end="\n")
         print("====================================", end="\n")
-    time.sleep(5)
