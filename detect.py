@@ -19,6 +19,10 @@ def detect(id):
       (rects, _) = hog.detectMultiScale(image, winStride=(4, 4), padding=(8, 8), scale=1.05)
       i.set_waiting_people(rects.shape[0])    
       sum_num += int(i.get_waiting_people())
+      # show the output images
+      for (x, y, w, h) in rects:
+        cv2.rectangle(image, (x, y), (x + w, y + h), (0, 0, 255), 2)
+      cv2.imshow("After NMS", image)
 
     # 欲查詢站牌後面各站總等待人數
     return sum_num
